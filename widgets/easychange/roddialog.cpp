@@ -22,28 +22,28 @@ RodDialog::RodDialog(QWidget *parent, Rod *elementRod) :
     IInput(new LineEdit(QString::number(elementRod->getI()), this)) // parent is this
 {
     auto layout = new QGridLayout(); // parent gets set later
-    layout->addWidget(new QLabel("Elastizitätsmodul [N/m²]:", this), 0, 0); // parent of the label is this
+    layout->addWidget(new QLabel("Young's modulus [N/m²]:", this), 0, 0); // parent of the label is this
     connectLineEdit(EInput, this, &RodDialog::setE);
     layout->addWidget(EInput, 0, 1);
-    layout->addWidget(new QLabel("Querschnittsfläche [m²]:", this), 1, 0);
+    layout->addWidget(new QLabel("Cross-sectional area [m²]:", this), 1, 0);
     connectLineEdit(AInput, this, &RodDialog::setA);
     layout->addWidget(AInput, 1, 1);
-    layout->addWidget(new QLabel("Flächenträgheitsmoment y [m<sup>4</sup>]:", this), 2, 0);
+    layout->addWidget(new QLabel("Second moment of area y [m<sup>4</sup>]:", this), 2, 0);
     connectLineEdit(IInput, this, &RodDialog::setI);
     layout->addWidget(IInput, 2, 1);
-    layout->addWidget(new QLabel("Größe der Normalkraft [N]:", this), 3, 0);
+    layout->addWidget(new QLabel("Normal force magnitude [N]:", this), 3, 0);
     layout->addWidget(rodForceLabel, 3, 1);
-    layout->addWidget(new QLabel(QString("x-Verschiebung Knoten ") + rod->getNode1()->getId() + QString(" [m]:"), this), 4, 0);
+    layout->addWidget(new QLabel(QString("x-displacement node ") + rod->getNode1()->getId() + QString(" [m]:"), this), 4, 0);
     layout->addWidget(u1xLabel, 4, 1);
-    layout->addWidget(new QLabel(QString("y-Verschiebung Knoten ") + rod->getNode1()->getId() + QString(" [m]:"), this), 5, 0);
+    layout->addWidget(new QLabel(QString("y-displacement node ") + rod->getNode1()->getId() + QString(" [m]:"), this), 5, 0);
     layout->addWidget(u1yLabel, 5, 1);
-    layout->addWidget(new QLabel(QString("z-Verdrehung Knoten ") + rod->getNode1()->getId() + QString(" [rad]:"), this), 6, 0);
+    layout->addWidget(new QLabel(QString("z-rotation node ") + rod->getNode1()->getId() + QString(" [rad]:"), this), 6, 0);
     layout->addWidget(u1zLabel, 6, 1);
-    layout->addWidget(new QLabel(QString("x-Verschiebung Knoten ") + rod->getNode2()->getId() + QString(" [m]:"), this), 7, 0);
+    layout->addWidget(new QLabel(QString("x-displacement node ") + rod->getNode2()->getId() + QString(" [m]:"), this), 7, 0);
     layout->addWidget(u2xLabel, 7, 1);
-    layout->addWidget(new QLabel(QString("y-Verschiebung Knoten ") + rod->getNode2()->getId() + QString(" [m]:"), this), 8, 0);
+    layout->addWidget(new QLabel(QString("y-displacement node ") + rod->getNode2()->getId() + QString(" [m]:"), this), 8, 0);
     layout->addWidget(u2yLabel, 8, 1);
-    layout->addWidget(new QLabel(QString("z-Verdrehung Knoten ") + rod->getNode2()->getId() + QString(" [rad]:"), this), 9, 0);
+    layout->addWidget(new QLabel(QString("z-rotation node ") + rod->getNode2()->getId() + QString(" [rad]:"), this), 9, 0);
     layout->addWidget(u2zLabel, 9, 1);
     connect(okButton, &QPushButton::clicked, this, &EasyChangeDialog::okPressed);
     layout->addWidget(okButton, 0, 2);

@@ -1,22 +1,35 @@
-# TrussCalculator
+# Instabeam
 
-A 2D truss structure analysis application built with C++ and Qt. It provides an interactive graphical interface for defining truss systems (nodes, rods, bearings, forces) and solves them using the Finite Element Method (FEM) with the Eigen linear algebra library.
+**Unstable development channel** — this is the actively developed successor of [TrussCalculator](https://github.com/wolfgang-alpha/TrussCalculator). Expect breaking changes, incomplete features, and rough edges. For the stable version, use TrussCalculator.
 
-## Author
+A 2D structural analysis application built with C++ and Qt. It provides an interactive graphical interface for defining structural systems and solves them using the Finite Element Method (FEM) with the Eigen linear algebra library.
 
-Written by [bernhard1536](https://github.com/bernhard1536), originally developed around 2018-2019.
+Originally written by [bernhard1536](https://github.com/bernhard1536) as TrussCalculator (ca. 2018-2019). Forked and extended as Instabeam.
+
+## What's new compared to TrussCalculator
+
+- Curved beam elements (Hermite arc elements derived from complementary energy)
+- Deformation visualization for curved beams
+- Mixed systems: straight rods and curved beams can share nodes
 
 ## Features
 
-- Interactive graphical editor for placing nodes, rods, bearings, and forces
-- FEM solver: assembles element/global stiffness matrices and solves K*U = F
-- Visualization of inner forces with color-mapped rods
+- Interactive graphical editor for placing nodes, rods, curved beams, bearings, and forces
+- FEM solver: assembles element/global stiffness matrices and solves K·U = F
+- Visualization of inner forces with color-mapped elements
 - Deformed system overlay
 - Support types: locating bearing, floating bearing, fixed clamping
-- Rod and rope (cable) elements
+- Rod, rope (cable), and curved beam elements
 - Dimension and label annotations
 - Save/load projects as JSON
 - Print support
+
+## Element stiffness matrix derivations
+
+Symbolic derivations for all new element types are in `new-element-derivations/`:
+
+- **`hermite_curved_beam.py`** — Hermite curved beam element. Derives the 6x6 element stiffness matrix from complementary energy (Parkus p.247). DOFs: radial translation, rotation, and tangential translation at each node.
+- **`cst_continuum_element.py`** — Constant Strain Triangle (CST) continuum element. Derives the 6x6 element stiffness matrix from strain energy for a triangular 2D element with two translational DOFs per node.
 
 ## Building
 
@@ -46,7 +59,7 @@ sudo pacman -S base-devel qt5-base
 Build:
 
 ```bash
-mkdir -p builds && cd builds
+mkdir -p build && cd build
 qmake ../TrussCalculator.pro
 make -j$(nproc)
 ```
@@ -54,7 +67,7 @@ make -j$(nproc)
 Run:
 
 ```bash
-./TrussCalculator
+./build/TrussCalculator
 ```
 
 ### Windows
@@ -71,7 +84,7 @@ Run:
 2. Open a Developer Command Prompt for Visual Studio:
 
 ```cmd
-mkdir builds && cd builds
+mkdir build && cd build
 qmake ..\TrussCalculator.pro -spec win32-msvc
 nmake
 ```
@@ -81,7 +94,7 @@ nmake
 1. Install Qt 5 with MinGW and add both `qmake` and MinGW `bin/` to your PATH:
 
 ```cmd
-mkdir builds && cd builds
+mkdir build && cd build
 qmake ..\TrussCalculator.pro -spec win32-g++
 mingw32-make -j%NUMBER_OF_PROCESSORS%
 ```

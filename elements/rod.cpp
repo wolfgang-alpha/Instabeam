@@ -351,7 +351,7 @@ EasyChangeDialog *Rod::createEasyChangeDialog()
 
 QString Rod::getElementSelectionDialogButtonText() const
 {
-    return QString("Stab (ID: ") + getId() + QString(")"); // use address of this as a unique identifier
+    return QString("Rod (ID: ") + getId() + QString(")"); // use address of this as a unique identifier
 }
 
 QString Rod::getId() const

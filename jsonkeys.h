@@ -33,6 +33,7 @@ namespace JsonKeys { // there is no .cpp-file of this .h-file because it only de
     const QString force = "rodForce";
     const QString orientation = "orientation";
     const QString baselinePos = "baselinePos";
+    const QString radius = "radius";
 } // end namespace JsonKeys
 
 #endif // JSONKEYS_H

@@ -81,11 +81,11 @@ EasyChangeDialog *Bearing::createEasyChangeDialog()
 QString Bearing::getElementSelectionDialogButtonText() const
 {
     if (bearingType == BearingType::LocatingBearing) {
-        return QString("Festlager (ID: ") + getId() + QString(")");
+        return QString("Locating bearing (ID: ") + getId() + QString(")");
     } else if (bearingType == BearingType::FloatingBearing) {
-        return QString("Loslager (ID: ") + getId() + QString(")");
+        return QString("Floating bearing (ID: ") + getId() + QString(")");
     } else {
-        return QString("Feste Einspannung (ID: ") + getId() + QString(")");
+        return QString("Fixed clamping (ID: ") + getId() + QString(")");
     }
 }
 

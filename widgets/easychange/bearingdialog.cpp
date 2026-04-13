@@ -18,19 +18,19 @@ BearingDialog::BearingDialog(QWidget *parent, Bearing *elementBearing) :
     connectLineEdit(angleInputLineEdit, this, &BearingDialog::setAngle);
     angleInputLineEdit->setText(QString::number(bearing->getAngle()));
     if (bearing->getBearingType() != BearingType::FloatingBearing) {
-        formLayout->addRow("Winkel [°]:", angleInputLineEdit);
+        formLayout->addRow("Angle [°]:", angleInputLineEdit);
     } else {
         angleInputLineEdit->hide();
     }
-    typeInput->insertItem(0, "Festlager"); // the indexes of the combobox-items have to be the same as in the BearingType-enum
-    typeInput->insertItem(1, "Loslager");
-    typeInput->insertItem(2, "Feste Einspannung");
+    typeInput->insertItem(0, "Locating bearing"); // the indexes of the combobox-items have to be the same as in the BearingType-enum
+    typeInput->insertItem(1, "Floating bearing");
+    typeInput->insertItem(2, "Fixed clamping");
     typeInput->setCurrentIndex(static_cast<int>(bearing->getBearingType()));
     connect(typeInput, qOverload<int>(&QComboBox::currentIndexChanged), this, &BearingDialog::setType);
-    formLayout->addRow("Lagertyp:", typeInput);
-    formLayout->addRow("Lagerreaktion x [N]:", xForceLabel);
-    formLayout->addRow("Lagerreaktion y [N]:", yForceLabel);
-    formLayout->addRow("Reaktionsmoment z [Nm]:", zMomentLabel);
+    formLayout->addRow("Bearing type:", typeInput);
+    formLayout->addRow("Reaction force x [N]:", xForceLabel);
+    formLayout->addRow("Reaction force y [N]:", yForceLabel);
+    formLayout->addRow("Reaction moment z [Nm]:", zMomentLabel);
 
     auto hBoxLayout = new QHBoxLayout(); // gets reparented later
     hBoxLayout->addLayout(formLayout);

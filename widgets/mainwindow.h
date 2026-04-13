@@ -25,6 +25,7 @@ public:
 
     void toggleNodeAdder(bool checked);
     void toggleRodAdder(bool checked);
+    void toggleCurvedBeamAdder(bool checked);
     void toggleBearingAdder(bool checked);
     void toggleForceAdder(bool checked);
     void toggleDimensionAdder(bool checked);
@@ -54,6 +55,7 @@ private:
     QToolBar *toolBar; // has this as parent
     QAction *actionToggleNodeAdder; // has this as parent
     QAction *actionToggleRodAdder; // has this as parent
+    QAction *actionToggleCurvedBeamAdder; // has this as parent
     QAction *actionToggleBearingAdder; // has this as parent
     QAction *actionToggleForceAdder; // has this as parent
     QAction *actionToggleDimensionAdder; // has this as parent

@@ -52,6 +52,11 @@ void GraphicsView::toggleRodAdder(bool checked)
     getGraphicsScene()->addRod(checked);
 }
 
+void GraphicsView::toggleCurvedBeamAdder(bool checked)
+{
+    getGraphicsScene()->addCurvedBeam(checked);
+}
+
 void GraphicsView::toggleBearingAdder(bool checked)
 {
     getGraphicsScene()->addBearing(checked);

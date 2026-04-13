@@ -263,9 +263,9 @@ void Node::hoverEnterEvent(QGraphicsSceneHoverEvent *event) // reimplement this 
 QString Node::getElementSelectionDialogButtonText() const
 {
     if (nodeType == NodeType::GerberJoint) {
-        return QString("Gerber-Gelenk (ID: ") + getId() + QString(")");
+        return QString("Gerber joint (ID: ") + getId() + QString(")");
     } else {
-        return QString("Schweißnaht (ID: ") + getId() + QString(")");
+        return QString("Weld (ID: ") + getId() + QString(")");
     }
 }
 

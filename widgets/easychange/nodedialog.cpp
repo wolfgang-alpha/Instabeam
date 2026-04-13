@@ -18,20 +18,20 @@ NodeDialog::NodeDialog(QWidget *parent, Node *elementNode) :
     uyLabel(new QLabel(QString::number(node->getUy()), this))
 {
     typeBox = new QComboBox(this);
-    auto texts = QStringList({"Gerbergelenk", "Schweißnaht"}); // has to be the same order as in the NodeType-enum
+    auto texts = QStringList({"Gerber joint", "Weld"}); // has to be the same order as in the NodeType-enum
     typeBox->addItems(texts);
     typeBox->setCurrentIndex(static_cast<int>(node->getNodeType()));
 
     auto gridLayout = new QGridLayout(); // parent gets set later
-    gridLayout->addWidget(new QLabel("Knoten Nr.:"), 0, 0);
+    gridLayout->addWidget(new QLabel("Node no.:"), 0, 0);
     gridLayout->addWidget(idLabel, 0, 1);
-    gridLayout->addWidget(new QLabel("x-Position [m]:"), 1, 0);
+    gridLayout->addWidget(new QLabel("x-position [m]:"), 1, 0);
     connectLineEdit(xPosInput, this, &NodeDialog::setXPos);
     gridLayout->addWidget(xPosInput, 1, 1);
-    gridLayout->addWidget(new QLabel("y-Position [m]:"), 2, 0);
+    gridLayout->addWidget(new QLabel("y-position [m]:"), 2, 0);
     connectLineEdit(yPosInput, this, &NodeDialog::setYPos);
     gridLayout->addWidget(yPosInput, 2, 1);
-    gridLayout->addWidget(new QLabel("Knotentyp:"), 3, 0);
+    gridLayout->addWidget(new QLabel("Node type:"), 3, 0);
     connect(typeBox, static_cast<void (QComboBox::*)(int)>(&QComboBox::activated), this, &NodeDialog::setType);
     if (node->getBearing() != nullptr) { // disable type selection in case of fixed clamping, because the node then has to be a weld
         if (node->getBearing()->getBearingType() == BearingType::FixedClamping) {
@@ -39,9 +39,9 @@ NodeDialog::NodeDialog(QWidget *parent, Node *elementNode) :
         }
     }
     gridLayout->addWidget(typeBox, 3, 1);
-    gridLayout->addWidget(new QLabel("x-Verschiebung [m]:"), 4, 0);
+    gridLayout->addWidget(new QLabel("x-displacement [m]:"), 4, 0);
     gridLayout->addWidget(uxLabel, 4, 1);
-    gridLayout->addWidget(new QLabel("y-Verschiebung [m]:"), 5, 0);
+    gridLayout->addWidget(new QLabel("y-displacement [m]:"), 5, 0);
     gridLayout->addWidget(uyLabel, 5, 1);
     auto finalLayout = new QHBoxLayout(); // parent gets set later
     finalLayout->addLayout(gridLayout);

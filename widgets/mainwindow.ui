@@ -31,7 +31,7 @@
    </property>
    <widget class="QMenu" name="menuDatei">
     <property name="title">
-     <string>Datei</string>
+     <string>File</string>
     </property>
     <addaction name="separator"/>
     <addaction name="separator"/>
@@ -48,7 +48,7 @@
    </widget>
    <widget class="QMenu" name="menuOptionen">
     <property name="title">
-     <string>Optionen</string>
+     <string>Options</string>
     </property>
     <addaction name="action_Settings"/>
     <addaction name="actionDefineEAIglobal"/>
@@ -69,10 +69,10 @@
   <widget class="QStatusBar" name="statusBar"/>
   <action name="action_New">
    <property name="text">
-    <string>Neu (Ctrl+N)</string>
+    <string>New (Ctrl+N)</string>
    </property>
    <property name="toolTip">
-    <string>Neues Fachwerk</string>
+    <string>New system</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
@@ -80,10 +80,10 @@
   </action>
   <action name="action_Open">
    <property name="text">
-    <string>Öffnen (Ctrl+O)</string>
+    <string>Open (Ctrl+O)</string>
    </property>
    <property name="toolTip">
-    <string>Fachwerkdatei öffnen</string>
+    <string>Open file</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
@@ -91,10 +91,10 @@
   </action>
   <action name="action_Save">
    <property name="text">
-    <string>Speichern (Ctrl+S)</string>
+    <string>Save (Ctrl+S)</string>
    </property>
    <property name="toolTip">
-    <string>geöffnetes Fachwerk speichern</string>
+    <string>Save current system</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
@@ -102,34 +102,34 @@
   </action>
   <action name="action_SaveAs">
    <property name="text">
-    <string>Speichern unter</string>
+    <string>Save as</string>
    </property>
    <property name="toolTip">
-    <string>geöffnetes Fachwerk als neue Datei speichern</string>
+    <string>Save current system to a new file</string>
    </property>
   </action>
   <action name="action_Close">
    <property name="text">
-    <string>Schließen (Alt+F4)</string>
+    <string>Close (Alt+F4)</string>
    </property>
    <property name="toolTip">
-    <string>beendet den Fachwerkrechner</string>
+    <string>Quit Instabeam</string>
    </property>
   </action>
   <action name="action_About">
    <property name="text">
-    <string>Über</string>
+    <string>About</string>
    </property>
    <property name="toolTip">
-    <string>Informationen über den Fachwerkrechner</string>
+    <string>About Instabeam</string>
    </property>
   </action>
   <action name="action_Settings">
    <property name="text">
-    <string>Einstellungen</string>
+    <string>Settings</string>
    </property>
    <property name="toolTip">
-    <string>Einstellungen des Fachwerkrechners bearbeiten</string>
+    <string>Edit Instabeam settings</string>
    </property>
   </action>
   <action name="action_colorRods">
@@ -137,10 +137,10 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Stäbe einfärben</string>
+    <string>Color rods</string>
    </property>
    <property name="toolTip">
-    <string>Stäbe anhand ihrer Stabkraft farbskalieren</string>
+    <string>Color rods by their internal force</string>
    </property>
   </action>
   <action name="action_markZeroLoadingRods">
@@ -148,18 +148,18 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Nullstäbe markieren</string>
+    <string>Mark zero-force rods</string>
    </property>
    <property name="toolTip">
-    <string>markiert die Nullstäbe des Systems</string>
+    <string>Highlight zero-force rods in the system</string>
    </property>
   </action>
   <action name="action_ShowSystemDefinition">
    <property name="text">
-    <string>Systemdefinition anzeigen</string>
+    <string>Show system definition</string>
    </property>
    <property name="toolTip">
-    <string>listet alle Elemente des Systems auf</string>
+    <string>List all elements of the system</string>
    </property>
   </action>
   <action name="action_ShowRodNumbers">
@@ -167,10 +167,10 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Stabnummerierung anzeigen</string>
+    <string>Show rod numbers</string>
    </property>
    <property name="toolTip">
-    <string>zeigt die Stabnummern an</string>
+    <string>Display rod numbering</string>
    </property>
   </action>
   <action name="action_ShowNodeNumbers">
@@ -178,18 +178,18 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Knotennummerierung anzeigen</string>
+    <string>Show node numbers</string>
    </property>
    <property name="toolTip">
-    <string>zeigt die Knotennummerierung an</string>
+    <string>Display node numbering</string>
    </property>
   </action>
   <action name="action_Print">
    <property name="text">
-    <string>Drucken (Ctrl+P)</string>
+    <string>Print (Ctrl+P)</string>
    </property>
    <property name="toolTip">
-    <string>das System drucken oder als PDF-Dokument exportieren</string>
+    <string>Print the system or export as PDF</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+P</string>
@@ -200,12 +200,12 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Deformiertes System zeichnen</string>
+    <string>Draw deformed system</string>
    </property>
   </action>
   <action name="actionDefineEAIglobal">
    <property name="text">
-    <string>Definiere E, A, I global</string>
+    <string>Define E, A, I globally</string>
    </property>
   </action>
  </widget>

@@ -4,6 +4,7 @@
 #include "elements/bearing.h"
 #include "elements/node.h"
 #include "elements/rod.h"
+#include "elements/curvedbeam.h"
 #include "elements/singleforce.h"
 #include "utilities.h"
 #include "widgets/mainwindow.h"
@@ -160,27 +161,128 @@ QString Calculator::determineESM(const QList<Rod *> &rods, QVector<Eigen::Matrix
     for (auto rod : rods) {
         int id = rod->getCalcId();
         Eigen::Matrix6d k_e_local; // element-stiffness-matrix in element-coords
-        double EI = rod->getEI();
-        double l = rod->getLength();
-        double l2 = pow(l, 2);
-        double l3 = pow(l, 3);
-        double EA = rod->getEA();
-        k_e_local <<   12 * EI / l3, - 6 * EI / l2, - 12 * EI / l3, - 6 * EI / l2,        0,        0,
-                      - 6 * EI / l2,   4 * EI / l ,    6 * EI / l2,   2 * EI / l ,        0,        0,
-                     - 12 * EI / l3,   6 * EI / l2,   12 * EI / l3,   6 * EI / l2,        0,        0,
-                      - 6 * EI / l2,   2 * EI / l ,    6 * EI / l2,   4 * EI / l ,        0,        0,
-                                  0,             0,              0,             0,   EA / l, - EA / l,
-                                  0,             0,              0,             0, - EA / l,   EA / l;
         Eigen::Matrix6d T_e; // element-transformation-matrix
-        double alpha = rod->getAngle();
-        double c = cos(alpha);
-        double s = sin(alpha);
-        T_e <<  c,  0,  0,  0,  s,  0,
-                0,  1,  0,  0,  0,  0,
-                0,  0,  c,  0,  0,  s,
-                0,  0,  0,  1,  0,  0,
-               -s,  0,  0,  0,  c,  0,
-                0,  0, -s,  0,  0,  c;
+
+        if (auto curved = dynamic_cast<CurvedBeam *>(rod)) {
+            // curved beam element stiffness matrix (Hermite Bogenelemente)
+            double Ev = curved->getE();
+            double Av = curved->getA();
+            double Iv = curved->getI();
+            double Rv = fabs(curved->getEffectiveR());
+            double AE = Av * Ev;
+            double EI = Ev * Iv;
+            double a = curved->getOpeningAngle(); // opening angle [rad]
+            if (a <= 0) {
+                return "CurvedBeam has invalid geometry (radius too small for chord length).";
+            }
+            double a2 = a * a;
+            double a3 = a2 * a;
+            double a4 = a2 * a2;
+            double a5 = a2 * a3;
+            double a6 = a3 * a3;
+            double R2 = Rv * Rv;
+            double R3 = R2 * Rv;
+
+            // Raw ESM from the Hermite curved beam derivation (Parkus S.247).
+            // The notebook's energy formulation omits the 1/2 factor in the strain energy integral,
+            // so all entries are 2x the correct stiffness values. We divide by 2 below.
+            // Additionally, the notebook's DOF 1 and 3 (rotations) are scaled by R compared to
+            // the standard convention (U_notebook = R * theta). We apply the DOF scaling
+            // D = diag(1, R, 1, R, 1, 1) via: k_final(i,j) = k_raw(i,j) * D[i] * D[j] / 2.
+            k_e_local(0,0) = 96*AE*a/(35*Rv) - 144*EI/(R3*a3) + (-12*AE*R2*a4 + 288*EI)/(3*R3*a3) + (2*AE*R2*a4 + 72*EI)/(R3*a3);
+            k_e_local(0,1) = -46*AE*a2/(105*Rv) - 48*EI/(R3*a2) + (-AE*R2*a5 + 84*EI*a)/(R3*a3) + (4*AE*R2*a5 - 144*EI*a)/(3*R3*a3);
+            k_e_local(0,2) = -61*AE*a/(35*Rv) + 72*EI/(R3*a3) + (6*AE*R2*a4 - 288*EI)/(3*R3*a3);
+            k_e_local(0,3) = -127*AE*a2/(210*Rv) + 36*EI/(R3*a2) + (2*AE*R2*a5 - 144*EI*a)/(3*R3*a3);
+            k_e_local(0,4) = AE/Rv + 12*EI/(R3*a2) + (-2*AE*R2*a3 - 12*EI*a)/(R3*a3);
+            k_e_local(0,5) = -AE/Rv - 12*EI/(R3*a2) + (2*AE*R2*a3 + 12*EI*a)/(R3*a3);
+
+            k_e_local(1,1) = -68*AE*a3/(105*Rv) - 16*EI/(R3*a) + (2*AE*R2*a6 + 72*EI*a2)/(3*R3*a3);
+            k_e_local(1,2) = -13*AE*a2/(210*Rv) + 12*EI/(R3*a2);
+            k_e_local(1,3) = -AE*a3/(70*Rv) + 4*EI/(R3*a);
+            k_e_local(1,4) = -5*AE*a/(6*Rv) + 8*EI/(R3*a) + (AE*R2*a4 - 6*EI*a2)/(R3*a3);
+            k_e_local(1,5) = 5*AE*a/(6*Rv) - 8*EI/(R3*a) + (-AE*R2*a4 + 6*EI*a2)/(R3*a3);
+
+            k_e_local(2,2) = 26*AE*a/(35*Rv) + 24*EI/(R3*a3);
+            k_e_local(2,3) = 11*AE*a2/(105*Rv) + 12*EI/(R3*a2);
+            k_e_local(2,4) = -AE/Rv;
+            k_e_local(2,5) = AE/Rv;
+
+            k_e_local(3,3) = 2*AE*a3/(105*Rv) + 8*EI/(R3*a);
+            k_e_local(3,4) = -AE*a/(6*Rv) - 2*EI/(R3*a);
+            k_e_local(3,5) = AE*a/(6*Rv) + 2*EI/(R3*a);
+
+            k_e_local(4,4) = (2*AE*R2*a2 + 2*EI*a2)/(R3*a3);
+            k_e_local(4,5) = (-2*AE*R2*a2 - 2*EI*a2)/(R3*a3);
+
+            k_e_local(5,5) = (2*AE*R2*a2 + 2*EI*a2)/(R3*a3);
+
+            // fill symmetric entries
+            k_e_local(1,0) = k_e_local(0,1);
+            k_e_local(2,0) = k_e_local(0,2);
+            k_e_local(2,1) = k_e_local(1,2);
+            k_e_local(3,0) = k_e_local(0,3);
+            k_e_local(3,1) = k_e_local(1,3);
+            k_e_local(3,2) = k_e_local(2,3);
+            k_e_local(4,0) = k_e_local(0,4);
+            k_e_local(4,1) = k_e_local(1,4);
+            k_e_local(4,2) = k_e_local(2,4);
+            k_e_local(4,3) = k_e_local(3,4);
+            k_e_local(5,0) = k_e_local(0,5);
+            k_e_local(5,1) = k_e_local(1,5);
+            k_e_local(5,2) = k_e_local(2,5);
+            k_e_local(5,3) = k_e_local(3,5);
+            k_e_local(5,4) = k_e_local(4,5);
+
+            // apply DOF scaling (D = diag(1, R, 1, R, 1, 1)) and energy correction (/2)
+            double D[6] = {1.0, Rv, 1.0, Rv, 1.0, 1.0};
+            for (int i = 0; i < 6; i++) {
+                for (int j = 0; j < 6; j++) {
+                    k_e_local(i, j) *= D[i] * D[j] / 2.0;
+                }
+            }
+
+            // curved beam transformation matrix: different tangent angles at each node
+            double gamma = curved->getAngle(); // chord angle [rad]
+            double half_alpha = a / 2.0;
+            double theta0, theta1;
+            if (curved->getEffectiveR() > 0) {
+                theta0 = gamma + half_alpha;
+                theta1 = gamma - half_alpha;
+            } else {
+                theta0 = gamma - half_alpha;
+                theta1 = gamma + half_alpha;
+            }
+            double c0 = cos(theta0), s0 = sin(theta0);
+            double c1 = cos(theta1), s1 = sin(theta1);
+            T_e <<  c0,  0,   0,  0,  s0,   0,
+                     0,  1,   0,  0,   0,   0,
+                     0,  0,  c1,  0,   0,  s1,
+                     0,  0,   0,  1,   0,   0,
+                   -s0,  0,   0,  0,  c0,   0,
+                     0,  0, -s1,  0,   0,  c1;
+        } else {
+            // straight beam element (Timoshenko)
+            double EI = rod->getEI();
+            double l = rod->getLength();
+            double l2 = pow(l, 2);
+            double l3 = pow(l, 3);
+            double EA = rod->getEA();
+            k_e_local <<   12 * EI / l3, - 6 * EI / l2, - 12 * EI / l3, - 6 * EI / l2,        0,        0,
+                          - 6 * EI / l2,   4 * EI / l ,    6 * EI / l2,   2 * EI / l ,        0,        0,
+                         - 12 * EI / l3,   6 * EI / l2,   12 * EI / l3,   6 * EI / l2,        0,        0,
+                          - 6 * EI / l2,   2 * EI / l ,    6 * EI / l2,   4 * EI / l ,        0,        0,
+                                      0,             0,              0,             0,   EA / l, - EA / l,
+                                      0,             0,              0,             0, - EA / l,   EA / l;
+            double alpha = rod->getAngle();
+            double c = cos(alpha);
+            double s = sin(alpha);
+            T_e <<  c,  0,  0,  0,  s,  0,
+                    0,  1,  0,  0,  0,  0,
+                    0,  0,  c,  0,  0,  s,
+                    0,  0,  0,  1,  0,  0,
+                   -s,  0,  0,  0,  c,  0,
+                    0,  0, -s,  0,  0,  c;
+        }
         Eigen::Matrix6d k_e = T_e.transpose() * k_e_local * T_e; // ESM in global coords
         rod->setElementTransformationMatrix(T_e);
         k_es.replace(id, k_e);
@@ -377,12 +479,19 @@ QString Calculator::applyResults(GraphicsScene *scene, const QList<Rod *> &rods,
             maxAbsN = fabs(f_e_local);
         }
         if (static_cast<MainWindow *>(scene->parent())->getDrawDeformedSystem()) {
-            for (int t = 0; t <= 100; t += step) { // get the maximum u or w of the rod
-                if (fabs(rod->uGraph(t / 100.0 * rod->getLength())) > maxAbsU) {
-                    maxAbsU = fabs(rod->uGraph(t / 100.0 * rod->getLength()));
+            if (auto curved = dynamic_cast<CurvedBeam *>(rod)) {
+                double d = curved->getMaxArcDisplacement();
+                if (d > maxAbsU) {
+                    maxAbsU = d;
                 }
-                if (fabs(rod->wGraph(t / 100.0 * rod->getLength())) > maxAbsU) {
-                    maxAbsU = fabs(rod->wGraph(t / 100.0 * rod->getLength()));
+            } else {
+                for (int t = 0; t <= 100; t += step) {
+                    if (fabs(rod->uGraph(t / 100.0 * rod->getLength())) > maxAbsU) {
+                        maxAbsU = fabs(rod->uGraph(t / 100.0 * rod->getLength()));
+                    }
+                    if (fabs(rod->wGraph(t / 100.0 * rod->getLength())) > maxAbsU) {
+                        maxAbsU = fabs(rod->wGraph(t / 100.0 * rod->getLength()));
+                    }
                 }
             }
         }

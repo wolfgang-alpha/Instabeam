@@ -1,6 +1,7 @@
 #include "rodadder.h"
 
 #include "elements/rod.h"
+#include "elements/curvedbeam.h"
 #include "elements/node.h"
 #include "graphicsscene.h"
 
@@ -88,10 +89,13 @@ void RodAdder::createRod() {
     scene->addItem(rod); // add rod to scene immediately after creation (for memory-management-reasons)
 }
 
-bool RodAdder::rodExistsAlready(Node *node) const // returns true if there is already a rod between the starting node of this rod and the given node
+bool RodAdder::rodExistsAlready(Node *node) const // returns true if there is already a straight rod between the starting node of this rod and the given node
 {
     auto rods = node->getRods();
     for (auto r : rods) {
+        if (dynamic_cast<CurvedBeam *>(r) != nullptr) {
+            continue; // skip curved beams — only block duplicate straight rods
+        }
         if ((r->getNode1() == node1 && r->getNode2() == node) || (r->getNode1() == node && r->getNode2() == node1)) {
             return true;
         }

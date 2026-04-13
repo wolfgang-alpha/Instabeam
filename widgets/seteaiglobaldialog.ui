@@ -19,7 +19,7 @@
      <item row="0" column="0">
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>Elastizitätsmodul [N/m²]:</string>
+        <string>Young's modulus [N/m²]:</string>
        </property>
       </widget>
      </item>
@@ -36,7 +36,7 @@
      <item row="1" column="0">
       <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>Querschnittsfläche [m²]:</string>
+        <string>Cross-sectional area [m²]:</string>
        </property>
       </widget>
      </item>
@@ -53,7 +53,7 @@
      <item row="2" column="0">
       <widget class="QLabel" name="label_3">
        <property name="text">
-        <string>Flächenträgheitsmoment y [m&lt;sup&gt;4&lt;/sup&gt;]:</string>
+        <string>Second moment of area y [m&lt;sup&gt;4&lt;/sup&gt;]:</string>
        </property>
       </widget>
      </item>
@@ -87,7 +87,7 @@
      <item>
       <widget class="QPushButton" name="cancelButton">
        <property name="text">
-        <string>Abbrechen</string>
+        <string>Cancel</string>
        </property>
       </widget>
      </item>

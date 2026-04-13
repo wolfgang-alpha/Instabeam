@@ -17,7 +17,8 @@ enum class ElementType {
     Bearing = 2,
     SingleForce = 3,
     Label = 4,
-    Dimension = 5
+    Dimension = 5,
+    CurvedBeam = 6
 };
 
 enum ElementZValue { // no enum class to reduce the amount of type-casting

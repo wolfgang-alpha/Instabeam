@@ -46,7 +46,7 @@ EasyChangeDialog *SingleForce::createEasyChangeDialog()
 
 QString SingleForce::getElementSelectionDialogButtonText() const
 {
-    return QString("Kraft (ID: ") + getId() + QString(")");
+    return QString("Force (ID: ") + getId() + QString(")");
 }
 
 QString SingleForce::getId() const

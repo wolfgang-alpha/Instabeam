@@ -8,5 +8,6 @@
         <file>windowtitleicon.png</file>
         <file>dimensionicon.png</file>
         <file>rodcolorscale.png</file>
+        <file>curvedbeamicon.png</file>
     </qresource>
 </RCC>

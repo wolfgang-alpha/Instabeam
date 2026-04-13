@@ -22,16 +22,16 @@ SystemDefinitionDialog::SystemDefinitionDialog(GraphicsScene *graphicsScene, QWi
 {
     ui->setupUi(this);
 
-    setWindowTitle("Systemdefinition");
+    setWindowTitle("System definition");
 
-    ui->tabWidget->setTabText(0, "Knoten");
-    setupTable<Node>(ui->nodeView, graphicsScene->items(), QStringList{"ID", "Knotenart", "x-Position [m]", "y-Position [m]", "x-Verschiebung [m]", "y-Verschiebung [m]"});
-    ui->tabWidget->setTabText(1, "Stäbe");
-    setupTable<Rod>(ui->rodView, graphicsScene->items(), QStringList{"ID", "Knoten 1-ID", "Knoten 2-ID", "E [N/m²]", "A [m²]", "Iy [m^4]", "Normalkraft [N]", "x-Verschiebung 1 [m]", "y-Verschiebung 1 [m]", "z-Verdrehung 1 [rad]", "x-Verschiebung 2 [m]", "y-Verschiebung 2 [m]", "z-Verdrehung 2 [rad]"});
-    ui->tabWidget->setTabText(2, "Lager");
-    setupTable<Bearing>(ui->bearingView, graphicsScene->items(), QStringList{"ID", "Knoten-ID", "Lagerart", "Winkel [°]", "Lagerreaktion x [N]", "Lagerreaktion y [N]", "Reaktionsmoment z [Nm]"});
-    ui->tabWidget->setTabText(3, "Kräfte");
-    setupTable<SingleForce>(ui->forceView, graphicsScene->items(), QStringList{"ID", "Knoten-ID", "Wert [N]", "Winkel [°]"});
+    ui->tabWidget->setTabText(0, "Nodes");
+    setupTable<Node>(ui->nodeView, graphicsScene->items(), QStringList{"ID", "Node type", "x-position [m]", "y-position [m]", "x-displacement [m]", "y-displacement [m]"});
+    ui->tabWidget->setTabText(1, "Rods");
+    setupTable<Rod>(ui->rodView, graphicsScene->items(), QStringList{"ID", "Node 1 ID", "Node 2 ID", "E [N/m²]", "A [m²]", "Iy [m^4]", "Normal force [N]", "x-displacement 1 [m]", "y-displacement 1 [m]", "z-rotation 1 [rad]", "x-displacement 2 [m]", "y-displacement 2 [m]", "z-rotation 2 [rad]"});
+    ui->tabWidget->setTabText(2, "Bearings");
+    setupTable<Bearing>(ui->bearingView, graphicsScene->items(), QStringList{"ID", "Node ID", "Bearing type", "Angle [°]", "Reaction force x [N]", "Reaction force y [N]", "Reaction moment z [Nm]"});
+    ui->tabWidget->setTabText(3, "Forces");
+    setupTable<SingleForce>(ui->forceView, graphicsScene->items(), QStringList{"ID", "Node ID", "Value [N]", "Angle [°]"});
 
     on_tabWidget_currentChanged(0); // resize the dialog
     move(100, 100); // position dialog
@@ -46,7 +46,7 @@ void SystemDefinitionDialog::populateModel(QStandardItemModel *model, QList<Node
 {
     for (int i = 0; i < list.length(); i++) {
         model->setItem(i, 0, new QStandardItem(list.at(i)->getId())); // model takes ownership of item
-        model->setItem(i, 1, new QStandardItem(list.at(i)->getNodeType() == NodeType::GerberJoint ? "Gerbergelenk" : "Schweißnaht"));
+        model->setItem(i, 1, new QStandardItem(list.at(i)->getNodeType() == NodeType::GerberJoint ? "Gerber joint" : "Weld"));
         model->setItem(i, 2, new QStandardItem(QString::number(list.at(i)->x() / static_cast<GraphicsScene *>(list.at(i)->scene())->getScaleValue())));
         model->setItem(i, 3, new QStandardItem(QString::number(- list.at(i)->y() / static_cast<GraphicsScene *>(list.at(i)->scene())->getScaleValue()))); // flip y-axis
         model->setItem(i, 4, new QStandardItem(QString::number(list.at(i)->getUx())));
@@ -80,11 +80,11 @@ void SystemDefinitionDialog::populateModel(QStandardItemModel *model, QList<Bear
         model->setItem(i, 1, new QStandardItem(static_cast<Node *>(list.at(i)->parentItem())->getId()));
         QString s;
         if (list.at(i)->getBearingType() == BearingType::LocatingBearing) {
-            s = "Festlager";
+            s = "Locating bearing";
         } else if (list.at(i)->getBearingType() == BearingType::FloatingBearing) {
-            s = "Loslager";
+            s = "Floating bearing";
         } else {
-            s = "Feste Einspannung";
+            s = "Fixed clamping";
         }
         model->setItem(i, 2, new QStandardItem(s));
         model->setItem(i, 3, new QStandardItem(QString::number(list.at(i)->getAngle())));

@@ -42,20 +42,20 @@ Settings::Settings(MainWindow *parent) :
     maxDisplacementDistanceInput(new LineEdit(QString::number(static_cast<GraphicsScene *>(parent->getGraphicsView()->scene())->getMaxDisplacementDistance()), this)),
     displacementCalculationStepInput(new LineEdit(QString::number(static_cast<GraphicsScene *>(parent->getGraphicsView()->scene())->getDisplacementCalculationStep()), this))
 {
-    setWindowTitle("Einstellungen");
+    setWindowTitle("Settings");
 
     // create form-layout
     QFormLayout *formLayout = new QFormLayout(); // gets reparented later
     connectLineEdit(sceneWidthInput, &Settings::setSceneWidth);
-    formLayout->addRow("Minimale Breite des Zeichenbereiches [px]:", sceneWidthInput);
+    formLayout->addRow("Minimum drawing area width [px]:", sceneWidthInput);
     connectLineEdit(sceneHeightInput, &Settings::setSceneHeight);
-    formLayout->addRow("Minimale Höhe des Zeichenbereiches [px]:", sceneHeightInput);
+    formLayout->addRow("Minimum drawing area height [px]:", sceneHeightInput);
     connectLineEdit(scaleValueInput, &Settings::setScaleValue);
-    formLayout->addRow("Skalierungsfaktor [px/m]:", scaleValueInput);
+    formLayout->addRow("Scale factor [px/m]:", scaleValueInput);
     connectLineEdit(maxDisplacementDistanceInput, &Settings::setMaxDisplacementDistance);
-    formLayout->addRow("Maximal gezeichnete Auslenkung [px]:", maxDisplacementDistanceInput);
+    formLayout->addRow("Maximum drawn displacement [px]:", maxDisplacementDistanceInput);
     connectLineEdit(displacementCalculationStepInput, &Settings::setDisplacementCalculationStep);
-    formLayout->addRow("Schrittwert bei der Deformationszeichnung [%]:", displacementCalculationStepInput);
+    formLayout->addRow("Deformation drawing step size [%]:", displacementCalculationStepInput);
 
     // create button-area
     QHBoxLayout *hBoxLayout = new QHBoxLayout(); // gets reparented later
@@ -63,7 +63,7 @@ Settings::Settings(MainWindow *parent) :
     connect(okButton, &QPushButton::clicked, this, &Settings::okButtonClicked);
     okButton->setAutoDefault(false); // to not activate the button when the user presses enter
     hBoxLayout->addWidget(okButton);
-    QPushButton *cancelButton = new QPushButton("Abbrechen", this);
+    QPushButton *cancelButton = new QPushButton("Cancel", this);
     connect(cancelButton, &QPushButton::clicked, this, &Settings::hide); // hide the dialog without saving changes when cancel-button is clicked
     cancelButton->setAutoDefault(false); // see okButton
     hBoxLayout->addWidget(cancelButton);

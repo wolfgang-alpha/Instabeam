@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :
     toolBar(nullptr),
     actionToggleNodeAdder(nullptr),
     actionToggleRodAdder(nullptr),
+    actionToggleCurvedBeamAdder(nullptr),
     actionToggleBearingAdder(nullptr),
     actionToggleForceAdder(nullptr),
     actionToggleDimensionAdder(nullptr),
@@ -45,7 +46,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     auto graphicsScene = new GraphicsScene(this); // gets deleted when this is dtored
 
-    setWindowTitle("Fachwerkrechner v2.0");
+    setWindowTitle("Instabeam v2.0");
     setWindowIcon(QIcon(":/windowtitleicon.png"));
     showMaximized();
 
@@ -64,42 +65,49 @@ MainWindow::MainWindow(QWidget *parent) :
 
     actionToggleNodeAdder = new QAction(this); // parent is this
     actionToggleNodeAdder->setIcon(QIcon(":/nodeicon.png"));
-    actionToggleNodeAdder->setToolTip("Knoten hinzufügen");
+    actionToggleNodeAdder->setToolTip("Add nodes");
     actionToggleNodeAdder->setCheckable(true);
     connect(actionToggleNodeAdder, &QAction::toggled, this, &MainWindow::toggleNodeAdder);
     toolBar->addAction(actionToggleNodeAdder);
 
     actionToggleRodAdder = new QAction(this); // parent is this
     actionToggleRodAdder->setIcon(QIcon(":/rodicon.png"));
-    actionToggleRodAdder->setToolTip("Stäbe hinzufügen");
+    actionToggleRodAdder->setToolTip("Add rods");
     actionToggleRodAdder->setCheckable(true);
     connect(actionToggleRodAdder, &QAction::toggled, this, &MainWindow::toggleRodAdder);
     toolBar->addAction(actionToggleRodAdder);
 
+    actionToggleCurvedBeamAdder = new QAction(this); // parent is this
+    actionToggleCurvedBeamAdder->setIcon(QIcon(":/curvedbeamicon.png"));
+    actionToggleCurvedBeamAdder->setToolTip("Add curved beams");
+    actionToggleCurvedBeamAdder->setCheckable(true);
+    connect(actionToggleCurvedBeamAdder, &QAction::toggled, this, &MainWindow::toggleCurvedBeamAdder);
+    toolBar->addAction(actionToggleCurvedBeamAdder);
+
     actionToggleBearingAdder = new QAction(this); // parent is this
     actionToggleBearingAdder->setIcon(QIcon(":/bearingicon.png"));
-    actionToggleBearingAdder->setToolTip("Lager hinzufügen");
+    actionToggleBearingAdder->setToolTip("Add bearings");
     actionToggleBearingAdder->setCheckable(true);
     connect(actionToggleBearingAdder, &QAction::toggled, this, &MainWindow::toggleBearingAdder);
     toolBar->addAction(actionToggleBearingAdder);
 
     actionToggleForceAdder = new QAction(this); // parent is this
     actionToggleForceAdder->setIcon(QIcon(":/singleforceicon.png"));
-    actionToggleForceAdder->setToolTip("Kräfte hinzufügen");
+    actionToggleForceAdder->setToolTip("Add forces");
     actionToggleForceAdder->setCheckable(true);
     connect(actionToggleForceAdder, &QAction::toggled, this, &MainWindow::toggleForceAdder);
     toolBar->addAction(actionToggleForceAdder);
 
     actionToggleDimensionAdder = new QAction(this); // parent is this
     actionToggleDimensionAdder->setIcon(QIcon(":/dimensionicon.png"));
-    actionToggleDimensionAdder->setToolTip("Bemaßungen hinzufügen");
+    actionToggleDimensionAdder->setToolTip("Add dimensions");
     actionToggleDimensionAdder->setCheckable(true);
     connect(actionToggleDimensionAdder, &QAction::toggled, this, &MainWindow::toggleDimensionAdder);
     toolBar->addAction(actionToggleDimensionAdder);
 
     actionToggleLabelAdder = new QAction(this); // parent is this
     actionToggleLabelAdder->setIcon(QIcon(":/labelicon.png"));
-    actionToggleLabelAdder->setToolTip("Beschriftungen hinzufügen");
+    actionToggleLabelAdder->setToolTip("Add labels");
     actionToggleLabelAdder->setCheckable(true);
     connect(actionToggleLabelAdder, &QAction::toggled, this, &MainWindow::toggleLabelAdder);
     toolBar->addAction(actionToggleLabelAdder);
@@ -119,6 +127,8 @@ void MainWindow::toggleNodeAdder(bool checked)
     if (checked) {
         if (actionToggleRodAdder->isChecked()) {
             actionToggleRodAdder->setChecked(false);
+        } else if (actionToggleCurvedBeamAdder->isChecked()) {
+            actionToggleCurvedBeamAdder->setChecked(false);
         } else if (actionToggleBearingAdder->isChecked()) {
             actionToggleBearingAdder->setChecked(false);
         } else if (actionToggleForceAdder->isChecked()) {
@@ -137,6 +147,8 @@ void MainWindow::toggleRodAdder(bool checked)
     if (checked) {
         if (actionToggleNodeAdder->isChecked()) {
             actionToggleNodeAdder->setChecked(false);
+        } else if (actionToggleCurvedBeamAdder->isChecked()) {
+            actionToggleCurvedBeamAdder->setChecked(false);
         } else if (actionToggleBearingAdder->isChecked()) {
             actionToggleBearingAdder->setChecked(false);
         } else if (actionToggleForceAdder->isChecked()) {
@@ -150,6 +162,26 @@ void MainWindow::toggleRodAdder(bool checked)
     ui->graphicsView->toggleRodAdder(checked);
 }
 
+void MainWindow::toggleCurvedBeamAdder(bool checked)
+{
+    if (checked) {
+        if (actionToggleNodeAdder->isChecked()) {
+            actionToggleNodeAdder->setChecked(false);
+        } else if (actionToggleRodAdder->isChecked()) {
+            actionToggleRodAdder->setChecked(false);
+        } else if (actionToggleBearingAdder->isChecked()) {
+            actionToggleBearingAdder->setChecked(false);
+        } else if (actionToggleForceAdder->isChecked()) {
+            actionToggleForceAdder->setChecked(false);
+        } else if (actionToggleDimensionAdder->isChecked()) {
+            actionToggleDimensionAdder->setChecked(false);
+        } else if (actionToggleLabelAdder->isChecked()) {
+            actionToggleLabelAdder->setChecked(false);
+        }
+    }
+    ui->graphicsView->toggleCurvedBeamAdder(checked);
+}
+
 void MainWindow::toggleBearingAdder(bool checked)
 {
     if (checked) {
@@ -157,6 +189,8 @@ void MainWindow::toggleBearingAdder(bool checked)
             actionToggleNodeAdder->setChecked(false);
         } else if (actionToggleRodAdder->isChecked()) {
             actionToggleRodAdder->setChecked(false);
+        } else if (actionToggleCurvedBeamAdder->isChecked()) {
+            actionToggleCurvedBeamAdder->setChecked(false);
         } else if (actionToggleForceAdder->isChecked()) {
             actionToggleForceAdder->setChecked(false);
         } else if (actionToggleDimensionAdder->isChecked()) {
@@ -175,6 +209,8 @@ void MainWindow::toggleForceAdder(bool checked)
             actionToggleNodeAdder->setChecked(false);
         } else if (actionToggleRodAdder->isChecked()) {
             actionToggleRodAdder->setChecked(false);
+        } else if (actionToggleCurvedBeamAdder->isChecked()) {
+            actionToggleCurvedBeamAdder->setChecked(false);
         } else if (actionToggleBearingAdder->isChecked()) {
             actionToggleBearingAdder->setChecked(false);
         } else if (actionToggleDimensionAdder->isChecked()) {
@@ -193,6 +229,8 @@ void MainWindow::toggleDimensionAdder(bool checked)
             actionToggleNodeAdder->setChecked(false);
         } else if (actionToggleRodAdder->isChecked()) {
             actionToggleRodAdder->setChecked(false);
+        } else if (actionToggleCurvedBeamAdder->isChecked()) {
+            actionToggleCurvedBeamAdder->setChecked(false);
         } else if (actionToggleBearingAdder->isChecked()) {
             actionToggleBearingAdder->setChecked(false);
         } else if (actionToggleForceAdder->isChecked()) {
@@ -211,6 +249,8 @@ void MainWindow::toggleLabelAdder(bool checked)
             actionToggleNodeAdder->setChecked(false);
         } else if (actionToggleRodAdder->isChecked()) {
             actionToggleRodAdder->setChecked(false);
+        } else if (actionToggleCurvedBeamAdder->isChecked()) {
+            actionToggleCurvedBeamAdder->setChecked(false);
         } else if (actionToggleBearingAdder->isChecked()) {
             actionToggleBearingAdder->setChecked(false);
         } else if (actionToggleForceAdder->isChecked()) {
@@ -244,6 +284,8 @@ void MainWindow::quitAddingElements() const
         actionToggleNodeAdder->setChecked(false);
     } else if (actionToggleRodAdder->isChecked()) {
         actionToggleRodAdder->setChecked(false);
+    } else if (actionToggleCurvedBeamAdder->isChecked()) {
+        actionToggleCurvedBeamAdder->setChecked(false);
     } else if (actionToggleBearingAdder->isChecked()) {
         actionToggleBearingAdder->setChecked(false);
     } else if (actionToggleForceAdder->isChecked()) {
@@ -262,12 +304,12 @@ bool MainWindow::saveSystemBeforeContinuing() // saves the system if wanted and 
     }
     // there are items, offer saving them
     QMessageBox box(this);
-    box.setWindowTitle("Achtung:");
-    box.setText("Wenn Sie fortfahren, gehen alle nicht gespeicherten Änderungen verloren!\nMöchten Sie diese jetzt speichern?");
+    box.setWindowTitle("Warning:");
+    box.setText("If you continue, all unsaved changes will be lost!\nWould you like to save them now?");
     box.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
-    box.setButtonText(QMessageBox::Save, "Speichern");
-    box.setButtonText(QMessageBox::Discard, "Nicht speichern");
-    box.setButtonText(QMessageBox::Cancel, "Abbrechen");
+    box.setButtonText(QMessageBox::Save, "Save");
+    box.setButtonText(QMessageBox::Discard, "Don't save");
+    box.setButtonText(QMessageBox::Cancel, "Cancel");
     switch (box.exec()) {
     case QMessageBox::Save:
         on_action_Save_triggered(); // save content
@@ -320,17 +362,17 @@ void MainWindow::on_action_Open_triggered() // open file
 {
     on_action_New_triggered(); // offer user to save the current file, delete the scene and create a new (empty) one
     // find the file to open
-    QString filePath = QFileDialog::getOpenFileName(this, "Öffnen:", QDir::rootPath(), "Fachwerkrechner-Datei (*.json)");
+    QString filePath = QFileDialog::getOpenFileName(this, "Open:", QDir::rootPath(), "Instabeam file (*.json)");
     QFile file(filePath);
     if (!file.open(QFile::ReadOnly)) { // try to open the file, if unsuccessfull abort
-        QMessageBox::critical(this, "Fehler:", "Die ausgewählte Datei konnte nicht geöffnet werden!");
+        QMessageBox::critical(this, "Error:", "The selected file could not be opened!");
         return;
     }
     // populate the scene with new elements
     QJsonParseError parseError;
     QJsonDocument document = QJsonDocument::fromJson(file.readAll(), &parseError);
     if (parseError.error != QJsonParseError::NoError) { // an error occured
-        QMessageBox::critical(this, "Fehler:", "Die zu öffnende Datei enthält Syntaxfehler und konnte daher nicht korrekt gelesen werden!");
+        QMessageBox::critical(this, "Error:", "The file contains syntax errors and could not be read correctly!");
         return;
     }
     QJsonObject root = document.object(); // get root element
@@ -338,7 +380,7 @@ void MainWindow::on_action_Open_triggered() // open file
     if (version == "1.0") { // version is supported
         ui->graphicsView->loadFromJson(root.value(JsonKeys::graphicsView).toObject(), this); // let the graphicsView load the other values
     } else { // version is not supported, error
-        QMessageBox::critical(this, "Fehler:", "Die Protokollversion der zu öffnenden Datei wird in dieser Version des Fachwerkrechners nicht unterstützt!");
+        QMessageBox::critical(this, "Error:", "The file format version is not supported by this version of Instabeam!");
         return;
     }
 
@@ -360,7 +402,7 @@ bool MainWindow::on_action_Save_triggered() // save to current file
     }
     QSaveFile file(openFilePath);
     if (!file.open(QSaveFile::WriteOnly)) {
-        QMessageBox::critical(this, "Fehler:", "Eine Datei zum Speichern des Fachwerks konnte nicht erstellt werden!");
+        QMessageBox::critical(this, "Error:", "Could not create a file to save the system!");
         return false;
     }
     file.write(createSaveFileContent()); // overwrite content of existing file (or fill empty one)
@@ -374,22 +416,22 @@ bool MainWindow::on_action_Save_triggered() // save to current file
 bool MainWindow::on_action_SaveAs_triggered() // save as new file
 {
     QString selectedFilter; // allocate memory for the selected filter which gets set in the next line
-    QString filePath = QFileDialog::getSaveFileName(this, "Speichern unter:", QDir::homePath(), "Fachwerkrechner-Datei (*.json);;Grafik (*.png)", &selectedFilter);
+    QString filePath = QFileDialog::getSaveFileName(this, "Save as:", QDir::homePath(), "Instabeam file (*.json);;Image (*.png)", &selectedFilter);
     if (filePath.isEmpty()) { // user pressed cancel
         return false;
     }
     QSaveFile file(filePath);
     if (!file.open(QSaveFile::WriteOnly)) {
-        QMessageBox::critical(this, "Fehler:", "Eine Datei zum Speichern des Fachwerks konnte nicht erstellt werden!");
+        QMessageBox::critical(this, "Error:", "Could not create a file to save the system!");
         return false;
     }
-    if (selectedFilter == "Fachwerkrechner-Datei (*.json)") { // save system as json-file
+    if (selectedFilter == "Instabeam file (*.json)") { // save system as json-file
         file.write(createSaveFileContent()); // write content to file
         if (QFileInfo::exists(filePath)) { // resize the file if the user selected a file that already existed
             file.resize(file.pos());
         }
         openFilePath = filePath; // save filepath for later usage
-    } else if (selectedFilter == "Grafik (*.png)") { // save system as png-file
+    } else if (selectedFilter == "Image (*.png)") { // save system as png-file
         ui->graphicsView->closeEasyChangeDialog(); // otherwise an element could be selected and therefore have a different color
         quitAddingElements(); // to not add half-added elements to the image
         QImage image(ui->graphicsView->scene()->sceneRect().size().toSize(), QImage::Format_ARGB32); // create image
@@ -425,11 +467,13 @@ void MainWindow::on_action_Close_triggered() // close app
 
 void MainWindow::on_action_About_triggered() // show about-dialog
 {
-    QMessageBox::about(this, "Über den Fachwerkrechner", "Der Fachwerkrechner ist ein Programm zum schnellen und einfachen Zeichnen von Fachwerken und Berechnen der Deformationen bzw. der inneren Kräfte mittels Finite-Elemente-Methode.\n"
-                       "\nAchtung: Obwohl der Fachwerkrechner mit höchster Sorgfalt entwickelt wurde, wird keine Garantie für die Richtigkeit der Ergebnisse des Fachwerkrechners "
-                       "gegeben und keine Haftung für Schäden übernommen, welche aus der Verwendung der Ergebnisse des Fachwerkrechners resultieren!\n\nEntwickler: Bernhard Adami\n"
-                       "Copyright (C) 2020: Institut für Mechanik der Montanuniversität Leoben\n\nVersion: 2.0\n\nAusführliche Informationen zum Fachwerkrechner befinden sich in der "
-                       "Bedienungsanleitung.");
+    QMessageBox::about(this, "About Instabeam", "Instabeam is an application for quickly and easily drawing structural systems and computing deformations and internal forces using the Finite Element Method.\n"
+                       "\nWarning: Although Instabeam has been developed with the utmost care, no guarantee is given for the correctness of the results "
+                       "and no liability is accepted for damages resulting from the use of Instabeam's results!\n\n"
+                       "Developers:\n"
+                       "  Bernhard Adami (original TrussCalculator)\n"
+                       "  Wolfgang Flachberger (element stiffness matrices, curved beams)\n\n"
+                       "Copyright (C) 2020: Institute of Mechanics, Montanuniversitaet Leoben\n\nVersion: 2.1");
 }
 
 void MainWindow::on_action_Settings_triggered() // show settings-dialog
@@ -445,13 +489,13 @@ void MainWindow::closeEvent(QCloseEvent *event)
 //#else
 //    // ask if the content should be saved
 //    auto msgBox = std::make_unique<QMessageBox>(this);
-//    msgBox->setWindowTitle("Achtung:");
-//    msgBox->setText("Sollen die Änderungen am geöffneten Fachwerk gespeichert werden?");
+//    msgBox->setWindowTitle("Warning:");
+//    msgBox->setText("Would you like to save the changes to the current system?");
 //    msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
 //    msgBox->setDefaultButton(QMessageBox::Yes);
-//    msgBox->setButtonText(QMessageBox::Yes, "Ja");
-//    msgBox->setButtonText(QMessageBox::No, "Nein");
-//    msgBox->setButtonText(QMessageBox::Cancel, "Abbrechen");
+//    msgBox->setButtonText(QMessageBox::Yes, "Yes");
+//    msgBox->setButtonText(QMessageBox::No, "No");
+//    msgBox->setButtonText(QMessageBox::Cancel, "Cancel");
 //    switch(msgBox->exec()){
 //    case QMessageBox::Yes:
 //        if (on_action_Save_triggered()) // if saving was not successful, keep the app running, otherwise close it

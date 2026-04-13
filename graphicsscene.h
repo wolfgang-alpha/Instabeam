@@ -9,6 +9,7 @@ class TrussElement;
 class Node;
 class NodeAdder;
 class RodAdder;
+class CurvedBeamAdder;
 class BearingAdder;
 class ForceAdder;
 class DimensionAdder;
@@ -42,6 +43,7 @@ public:
 
     void addNode(bool checked);
     void addRod(bool checked);
+    void addCurvedBeam(bool checked);
     void addBearing(bool checked);
     void addForce(bool checked);
     void addDimension(bool checked);
@@ -49,6 +51,7 @@ public:
 
     bool nodeAdderActive() { return nodeAdder != nullptr; } // returns true if in node-adding-mode
     bool rodAdderActive() { return rodAdder != nullptr; }
+    bool curvedBeamAdderActive() { return curvedBeamAdder != nullptr; }
     bool labelAdderActive() { return labelAdder != nullptr; }
 
     TrussElement *getEasyChangeDialogElement() const; // returns weak-ptr
@@ -74,6 +77,7 @@ private:
 
     std::unique_ptr<NodeAdder> nodeAdder;
     std::unique_ptr<RodAdder> rodAdder;
+    std::unique_ptr<CurvedBeamAdder> curvedBeamAdder;
     std::unique_ptr<BearingAdder> bearingAdder;
     std::unique_ptr<ForceAdder> forceAdder;
     std::unique_ptr<DimensionAdder> dimensionAdder;

@@ -4,10 +4,12 @@
 #include "elements/node.h"
 #include "factories/nodeadder.h"
 #include "factories/rodadder.h"
+#include "factories/curvedbeamadder.h"
 #include "factories/bearingadder.h"
 #include "factories/forceadder.h"
 #include "factories/dimensionadder.h"
 #include "elements/rod.h"
+#include "elements/curvedbeam.h"
 #include "utilities.h"
 #include "calculator.h"
 #include "widgets/mainwindow.h"
@@ -28,6 +30,7 @@ GraphicsScene::GraphicsScene(MainWindow *parent) :
     QGraphicsScene(parent),
     nodeAdder(nullptr),
     rodAdder(nullptr),
+    curvedBeamAdder(nullptr),
     bearingAdder(nullptr),
     forceAdder(nullptr),
     dimensionAdder(nullptr),
@@ -46,6 +49,7 @@ GraphicsScene::GraphicsScene(const QJsonObject &object, MainWindow *parent) :
     QGraphicsScene(parent),
     nodeAdder(nullptr),
     rodAdder(nullptr),
+    curvedBeamAdder(nullptr),
     bearingAdder(nullptr),
     forceAdder(nullptr),
     dimensionAdder(nullptr),
@@ -66,6 +70,9 @@ GraphicsScene::GraphicsScene(const QJsonObject &object, MainWindow *parent) :
             break;
         case ElementType::Rod:
             setupElementFromJson<Rod>(element, memoryMap);
+            break;
+        case ElementType::CurvedBeam:
+            setupElementFromJson<CurvedBeam>(element, memoryMap);
             break;
         case ElementType::Bearing:
             setupElementFromJson<Bearing>(element, memoryMap);
@@ -92,6 +99,7 @@ GraphicsScene::GraphicsScene(const QJsonObject &object, MainWindow *parent) :
             } // no else-case because a element can be a parent and a member of an element
             switch (static_cast<ElementType>(e.value(JsonKeys::elementType).toInt())) { // switch the execution-path depending on the type of the element (to call different fcts)
             case ElementType::Rod:
+            case ElementType::CurvedBeam:
                 if (pair.first == e.value(JsonKeys::label).toString()) { // if the oldAddress is the rod's label, set the rod's member-ptr to the newAddress of the same label
                     static_cast<Rod *>(memoryMap.at(i).second)->setLabel(static_cast<Label *>(pair.second)); // memoryMap and elements have the same order
                 } else if (pair.first == e.value(JsonKeys::node1).toString()) { // check if the element at the oldAddress is the node1 of the rod
@@ -143,6 +151,8 @@ GraphicsScene::~GraphicsScene() // the items that the scene contains get deleted
         nodeAdder.reset();
     } else if (rodAdder != nullptr) {
         rodAdder.reset();
+    } else if (curvedBeamAdder != nullptr) {
+        curvedBeamAdder.reset();
     } else if (bearingAdder != nullptr) {
         bearingAdder.reset();
     } else if (forceAdder != nullptr) {
@@ -239,6 +249,15 @@ void GraphicsScene::addRod(bool checked)
         rodAdder = std::make_unique<RodAdder>(this);
     } else {
         rodAdder.reset(nullptr); // calls dtor of RodAdder which cleans up
+    }
+}
+
+void GraphicsScene::addCurvedBeam(bool checked)
+{
+    if (checked) {
+        curvedBeamAdder = std::make_unique<CurvedBeamAdder>(this);
+    } else {
+        curvedBeamAdder.reset(nullptr);
     }
 }
 
@@ -345,6 +364,10 @@ void GraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         Node *node = getNodeAt(event->scenePos());
         rodAdder->mouseClicked(event, node);
         event->accept();
+    } else if (curvedBeamAdder != nullptr) {
+        Node *node = getNodeAt(event->scenePos());
+        curvedBeamAdder->mouseClicked(event, node);
+        event->accept();
     } else if (bearingAdder) {
         Node *node = getNodeAt(event->scenePos());
         bearingAdder->mouseClicked(event, node);
@@ -379,6 +402,9 @@ void GraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     } else if (rodAdder != nullptr) {
         rodAdder->positionChanged(event->scenePos());
         event->accept();
+    } else if (curvedBeamAdder != nullptr) {
+        curvedBeamAdder->positionChanged(event->scenePos());
+        event->accept();
     } else if (dimensionAdder != nullptr) {
         dimensionAdder->positionChanged(event->scenePos());
         event->accept();
@@ -388,7 +414,7 @@ void GraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
     QGraphicsScene::mouseMoveEvent(event); // pass event to parent to handle hovering of the nodes
     // recalculate the system every time the mouse moves when not in adding-mode
-    if (nodeAdder == nullptr && rodAdder == nullptr && forceAdder == nullptr && bearingAdder == nullptr && dimensionAdder == nullptr) {
+    if (nodeAdder == nullptr && rodAdder == nullptr && curvedBeamAdder == nullptr && forceAdder == nullptr && bearingAdder == nullptr && dimensionAdder == nullptr) {
         static_cast<MainWindow *>(parent())->setStatusBarMessage(Calculator::calculate(this));
         if (static_cast<MainWindow *>(parent())->getColorRods() || static_cast<MainWindow *>(parent())->getMarkZeroLoadingRods()) {
             update(itemsBoundingRect()); // redraw whole scene after recalculating the model to properly color the rods

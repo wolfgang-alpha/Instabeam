@@ -8,6 +8,7 @@
 class GraphicsScene;
 class Node;
 class Rod;
+class CurvedBeam;
 class Bearing;
 class TrussElement;
 

@@ -30,6 +30,7 @@ CONFIG(release): CONFIG += -O3
 
 SOURCES += \
     elements/rope.cpp \
+    elements/curvedbeam.cpp \
         main.cpp \
     pen.cpp \
     color.cpp \
@@ -45,6 +46,7 @@ SOURCES += \
     widgets/easychange/easychangedialog.cpp \
     widgets/easychange/nodedialog.cpp \
     widgets/easychange/roddialog.cpp \
+    widgets/easychange/curvedbeamdialog.cpp \
     widgets/easychange/bearingdialog.cpp \
     widgets/easychange/singleforcedialog.cpp \
     elements/node.cpp \
@@ -54,6 +56,7 @@ SOURCES += \
     elements/singleforce.cpp \
     factories/nodeadder.cpp \
     factories/rodadder.cpp \
+    factories/curvedbeamadder.cpp \
     factories/bearingadder.cpp \
     factories/forceadder.cpp \
     widgets/systemdefinitiondialog.cpp \
@@ -67,6 +70,7 @@ SOURCES += \
 HEADERS += \
         color.h \
     elements/rope.h \
+    elements/curvedbeam.h \
     pen.h \
     utilities.h \
     graphicsscene.h \
@@ -80,6 +84,7 @@ HEADERS += \
     widgets/easychange/easychangedialog.h \
     widgets/easychange/nodedialog.h \
     widgets/easychange/roddialog.h \
+    widgets/easychange/curvedbeamdialog.h \
     widgets/easychange/bearingdialog.h \
     widgets/easychange/singleforcedialog.h \
     elements/node.h \
@@ -89,6 +94,7 @@ HEADERS += \
     elements/singleforce.h \
     factories/nodeadder.h \
     factories/rodadder.h \
+    factories/curvedbeamadder.h \
     factories/bearingadder.h \
     factories/forceadder.h \
     libs/Eigen/Eigen/Eigen \
