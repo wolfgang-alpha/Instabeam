@@ -1,4 +1,5 @@
 # # Hermite Curved Beam Elements
+# (c) Wolfgang Flachberger
 
 import numpy
 import sympy

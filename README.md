@@ -99,6 +99,10 @@ qmake ..\TrussCalculator.pro -spec win32-g++
 mingw32-make -j%NUMBER_OF_PROCESSORS%
 ```
 
+## Todo
+
+- Implementation of Constant Strain Triangle (CST) continuum elements (as defined in [`new-element-derivations/cst_continuum_element.py`](new-element-derivations/cst_continuum_element.py))
+
 ## License
 
 See the Eigen library license files in `libs/Eigen/` for Eigen's licensing (MPL2 / BSD / LGPL).

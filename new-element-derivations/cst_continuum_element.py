@@ -1,4 +1,5 @@
 # # CST Continuum Elements
+# (c) Wolfgang Flachberger
 
 import numpy
 import sympy
