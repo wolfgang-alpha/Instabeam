@@ -94,3 +94,7 @@ Fields: E, ν, thickness, plane-stress/plane-strain radio, node IDs (readonly), 
 - **Refactor scope**: step 1 touches `calculator.cpp`, every element's DOF handling, and JSON load. Alternative: keep rod-based calculator and add a parallel CST path — faster but creates two assembly codepaths. Recommend the refactor.
 - **Plane stress vs plane strain default**: propose plane stress with a per-element toggle.
 - **Mesh generation**: out of scope — user places triangles manually, same interaction model as rods.
+
+## Fixed-shape constraint
+
+CST elements must have a pre-defined shape (as defined by the interpolation functions) — otherwise the derived ESMs will not work. This is not very versatile; however, the speed of the calculation will be maintained and it fits in with the scheme of the other elements that have predefined ESMs.
