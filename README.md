@@ -18,6 +18,49 @@ The project was supervised by **Prof. Thomas Antretter**, whose vision shaped it
 - Deformation visualization for curved beams
 - Mixed systems: straight rods and curved beams can share nodes
 
+Symbolic derivations of the element stiffness matrices for the new element types live in `new-element-derivations/`.
+
+### `hermite_curved_beam.py` — Hermite curved beam element
+
+Derives the 6×6 element stiffness matrix from complementary energy (Parkus p. 247). Six degrees of freedom per element: radial translation and rotation at each node, plus tangential translation at each node.
+
+```
+             ____R____(1)
+            |          |
+ ARC:       |          /
+           R|         /                         CS:     __ x (i)
+            |       /                                  |
+            | _ _ /                                    z
+           (0)                                       (ii)
+
+Depicted case: alpha = pi/2
+
+DoF_0: radial translation.......Node (0)
+DoF_1: rotation.................Node (0)
+DoF_2: radial translation.......Node (1)
+DoF_3: rotation.................Node (1)
+DoF_4: tangential translation...Node (0)
+DoF_5: tangential translation...Node (1)
+```
+
+### `cst_continuum_element.py` — Constant Strain Triangle (CST) continuum element
+
+Derives the 6×6 element stiffness matrix from strain energy for a triangular 2D element with two translational DOFs per node.
+
+```
+           (0)___a____(1)
+            |         /
+ CST:       |       /
+           b|     /                         CS:        __ x (i)
+            |   /                                       |
+            | /                                         z
+           (2)                                        (ii)
+
+Two translational degrees of freedom per node => 6 DOFs.
+The first DOF is the x-displacement at node (0), the second
+is the z-displacement at node (0), and so on.
+```
+
 ## Features
 
 - Interactive graphical editor for placing nodes, rods, curved beams, bearings, and forces
@@ -29,13 +72,6 @@ The project was supervised by **Prof. Thomas Antretter**, whose vision shaped it
 - Dimension and label annotations
 - Save/load projects as JSON
 - Print support
-
-## Element stiffness matrix derivations
-
-Symbolic derivations for all new element types are in `new-element-derivations/`:
-
-- **`hermite_curved_beam.py`** — Hermite curved beam element. Derives the 6x6 element stiffness matrix from complementary energy (Parkus p.247). DOFs: radial translation, rotation, and tangential translation at each node.
-- **`cst_continuum_element.py`** — Constant Strain Triangle (CST) continuum element. Derives the 6x6 element stiffness matrix from strain energy for a triangular 2D element with two translational DOFs per node.
 
 ## Building
 
