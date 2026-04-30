@@ -4,7 +4,13 @@
 
 A 2D structural analysis application built with C++ and Qt. It provides an interactive graphical interface for defining structural systems and solves them using the Finite Element Method (FEM) with the Eigen linear algebra library.
 
-Originally written by [bernhard1536](https://github.com/bernhard1536) as TrussCalculator (ca. 2018-2019). Forked and extended as Instabeam.
+## Authors & Acknowledgments
+
+The original TrussCalculator application was written by [bernhard1536](https://github.com/bernhard1536) around 2018-2019, while he was an employee at the [Chair of Mechanics, Montanuniversität Leoben](https://www.unileoben.ac.at/universitaet/departments-und-lehrstuehle/physik-mechanik-und-elektrotechnik/lehrstuhl-fuer-mechanik/).
+
+Instabeam is a fork maintained by [wolfgang-alpha](https://github.com/wolfgang-alpha), who also contributed the mathematical derivations underlying the FEM logic of the original project and the new element formulations (curved Hermite beams, CST continuum elements) added in Instabeam.
+
+The project was supervised by **Prof. Thomas Antretter**, whose vision shaped its direction.
 
 ## What's new compared to TrussCalculator
 
@@ -105,4 +111,13 @@ mingw32-make -j%NUMBER_OF_PROCESSORS%
 
 ## License
 
-See the Eigen library license files in `libs/Eigen/` for Eigen's licensing (MPL2 / BSD / LGPL).
+Instabeam is free software: you can redistribute it and/or modify it under the terms of the **GNU General Public License v3** (or, at your option, any later version) as published by the Free Software Foundation. See the [`LICENSE`](LICENSE) file for the full license text.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+- Application code: Copyright (C) 2018-2019 [bernhard1536](https://github.com/bernhard1536) (original TrussCalculator) and Copyright (C) 2020-2026 [Wolfgang Flachberger](https://github.com/wolfgang-alpha) (Instabeam additions).
+- Element derivation scripts in `new-element-derivations/`: Copyright (C) Wolfgang Flachberger.
+
+### Third-party components
+
+The bundled [Eigen](https://eigen.tuxfamily.org/) library in `libs/Eigen/` is distributed under its own terms (primarily MPL2, with some files under BSD or LGPL). See the license files inside `libs/Eigen/` for details.
